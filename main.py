@@ -1,4 +1,54 @@
-from flask import Flask
+from flask import Flask, jsonify
+
+
+
+
+users = [
+  {
+    "id": 1,
+    "username": "JohnDoe",
+    "age": 32,
+    "weight": 75.5,
+    "height": 180
+  },
+  {
+    "id": 2,
+    "username": "JaneSmith",
+    "age": 28,
+    "weight": 62.1,
+    "height": 165
+  },
+  {
+    "id": 3,
+    "username": "MikeJohnson",
+    "age": 41,
+    "weight": 85.2,
+    "height": 190
+  },
+  {
+    "id": 4,
+    "username": "EmilyBrown",
+    "age": 24,
+    "weight": 58.7,
+    "height": 155
+  },
+  {
+    "id": 5,
+    "username": "DavidWilson",
+    "age": 37,
+    "weight": 79.9,
+    "height": 175
+  }
+]
+
+
+
+def get_user(users, id):
+    for user in users:
+        if user['id'] == id:
+            return user
+    
+    return None
 
 
 
@@ -6,37 +56,24 @@ from flask import Flask
 app = Flask(__name__)
 
 
-# http://localhost:5000/
-@app.route("/", methods=['GET'])
-def index():
-    return "<h1>Hello, World!</h1>"
+# http://localhost:5000/users
+@app.route("/users", methods=['GET'])
+def get_users():
+
+    return jsonify(users)
 
 
+# http://localhost:5000/users/:id
+@app.route("/users/<int:id>", methods=['GET'])
+def get_user_by_id(id):
 
-# http://localhost:5000/sayhello/<name>
-@app.route("/sayhello/<name>", methods=['GET'])
-def say_hello(name):
-    return f"<h1>hello {name}!</h1>"
+    user = get_user(users, id)
 
-
-
-
-
-# http://localhost:5000/add/<num1>/<num2>
-@app.route("/add/<int:num1>/<int:num2>", methods=['GET'])
-def add(num1, num2):
-
-    return f"<h1>result: {num1 + num2}!</h1>"
-
-
-# http://localhost:5000/add/<num1>/<num2>
-@app.route("/sub/<int:num1>/<int:num2>", methods=['GET'])
-def sub(num1, num2):
-
-    return f"<h1>result: {num1 - num2}!</h1>"
-
-
-
+    if user != None:
+        return jsonify(user)
+    else:
+        rsp = {'status': 'faild', 'msg': 'user not found'}
+        return (jsonify(rsp), 404)
 
 
 
