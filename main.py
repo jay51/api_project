@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 
 
@@ -52,7 +52,7 @@ def get_user(users, id):
 
 
 
-
+id = 11
 app = Flask(__name__)
 
 
@@ -96,6 +96,28 @@ def delete_user_by_id(id):
 
 
 
+# POST http://localhost:5000/users
+@app.route("/users", methods=['POST'])
+def create_user():
+  global id
+  global users
+  user_data = request.get_json()
+  # {'keys': 'val'}
+
+  if 'username' not in user_data or 'age' not in user_data or 'weight' not in user_data or 'height' not in user_data:
+    rsp = {'status': 'faild', 'msg': 'invalid user data'}
+    return (jsonify(rsp), 400)
+  
+  user_data['id'] = id
+  id += 1
+  users.append(user_data)
+
+  return jsonify(users)
+
+  # username = 0
+  # age = 0
+  # weight = 0
+  # height = 0
 
 
 
