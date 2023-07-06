@@ -5,7 +5,7 @@ from flask import Flask, jsonify
 
 users = [
   {
-    "id": 1,
+    "id": 10,
     "username": "JohnDoe",
     "age": 32,
     "weight": 75.5,
@@ -56,14 +56,14 @@ def get_user(users, id):
 app = Flask(__name__)
 
 
-# http://localhost:5000/users
+# GET http://localhost:5000/users
 @app.route("/users", methods=['GET'])
 def get_users():
 
     return jsonify(users)
 
 
-# http://localhost:5000/users/:id
+# GET http://localhost:5000/users/:id
 @app.route("/users/<int:id>", methods=['GET'])
 def get_user_by_id(id):
 
@@ -74,6 +74,25 @@ def get_user_by_id(id):
     else:
         rsp = {'status': 'faild', 'msg': 'user not found'}
         return (jsonify(rsp), 404)
+
+
+# DELETE http://localhost:5000/users/:id
+@app.route("/users/<int:id>", methods=['DELETE'])
+def delete_user_by_id(id):
+  global users
+
+  found = False
+  for x in range(len(users)-1):
+    if users[x]['id'] == id:
+      users.pop(x)
+      found = True
+
+
+  if found == True:
+      return jsonify(users)
+  else:
+    rsp = {'status': 'faild', 'msg': 'user not found'}
+    return (jsonify(rsp), 404)
 
 
 
